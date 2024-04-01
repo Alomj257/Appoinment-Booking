@@ -1,17 +1,37 @@
 import React from 'react';
-import {Form, Input} from 'antd';
+import {Form, Input, message} from 'antd';
 import '../styles/Register.css';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { Link, useNavigate} from 'react-router-dom';
 
 function Register() {
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
 
   // From hamdler
-  const onFinishHandler = (values) => {
-    console.log(values);
-  }
+  const onFinishHandler = async (values) => {
+    try {
+      // Sending registration data to the server
+      const res = await axios.post('/api/v1/user/register', values);
+      if (res.data && res.data.message) {
+        // Show success message if registration is successful
+        message.success(res.data.message);
+        // Redirect to login page
+        navigate('/login');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        // If user already exists, display the error message from the backend
+        message.error(error.response.data.message);
+        navigate('/login')
+      } else {
+        // Show error message if an error occurs during registration
+        message.error('Something went wrong');
+      }
+    }
+  };
+  
 
 
   return (

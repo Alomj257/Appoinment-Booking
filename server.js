@@ -21,16 +21,12 @@ app.use(morgan('dev'));
 
 
 //routes
-app.get('/', (req, res) => {
-    res.status(200).send({
-        message: 'server started'
-    });
-});
+app.use('/api/v1/user', require('./routes/userRoutes'));
 
 //Port
 const port = process.env.PORT || 8000
 
 //listen
 app.listen(port, () =>{
-    console.log(`Sserver running in ${process.env.NODE_MODE} mode on port number ${process.env.PORT}`);
+    console.log(`Server running in ${process.env.NODE_MODE} mode on port number ${process.env.PORT}`);
 })
